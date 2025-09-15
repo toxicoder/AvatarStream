@@ -1,0 +1,29 @@
+[gd_scene load_steps=2 format=3 uid="uid://c7wks3vyv2nfa"]
+
+[ext_resource type="Script" path="res://scripts/TrackingUI.gd" id="1_vtpf5"]
+
+[node name="TrackingUI" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_vtpf5")
+
+[node name="CalibrateButton" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -75.0
+offset_top = -100.0
+offset_right = 75.0
+offset_bottom = -50.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Calibrate T-Pose"
+
+[connection signal="pressed" from="CalibrateButton" to="." method="_on_CalibrateButton_pressed"]

@@ -290,6 +290,41 @@ mesh = SubResource("BoxMesh_RightUpperLeg")
 skeleton = NodePath("..")
 bone_attachment/bone_idx = 5
 
+[node name="LeftArmIK" type="SkeletonIK3D" parent="Skeleton3D"]
+root_bone = &"LeftUpperArm"
+tip_bone = &"LeftHand"
+target_node = NodePath("../../IKTargets/LeftArmIKTarget")
+
+[node name="RightArmIK" type="SkeletonIK3D" parent="Skeleton3D"]
+root_bone = &"RightUpperArm"
+tip_bone = &"RightHand"
+target_node = NodePath("../../IKTargets/RightArmIKTarget")
+
+[node name="LeftLegIK" type="SkeletonIK3D" parent="Skeleton3D"]
+root_bone = &"LeftUpperLeg"
+tip_bone = &"LeftFoot"
+target_node = NodePath("../../IKTargets/LeftLegIKTarget")
+
+[node name="RightLegIK" type="SkeletonIK3D" parent="Skeleton3D"]
+root_bone = &"RightUpperLeg"
+tip_bone = &"RightFoot"
+target_node = NodePath("../../IKTargets/RightLegIKTarget")
+
+[node name="IKTargets" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+
+[node name="LeftArmIKTarget" type="Node3D" parent="IKTargets"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 1.5, 0)
+
+[node name="RightArmIKTarget" type="Node3D" parent="IKTargets"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 1.5, 0)
+
+[node name="LeftLegIKTarget" type="Node3D" parent="IKTargets"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.2, 0.2, 0)
+
+[node name="RightLegIKTarget" type="Node3D" parent="IKTargets"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.2, 0.2, 0)
+
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
 "": &"default"
