@@ -10,6 +10,8 @@ var is_virtual_cam_running = false
 @onready var virtual_cam_label = $VirtualCamLabel
 @onready var save_dialog = $SaveDialog
 @onready var load_dialog = $LoadDialog
+@onready var scale_slider = $VBoxContainer/ScaleSlider
+@onready var control_hint_label = $VBoxContainer/ControlHintLabel
 
 func _ready():
 	# Add resolution options
@@ -40,10 +42,26 @@ func _on_ResolutionOptionButton_item_selected(index):
 	var height = int(resolution[1])
 	godot_cmio.set_resolution(width, height)
 
+var control_hints = {
+	"VirtualCamButton": "Starts or stops the virtual camera.",
+	"ResolutionOptionButton": "Sets the virtual camera resolution.",
+	"CalibrateButton": "Calibrates the avatar to a T-pose.",
+	"StartTrackingButton": "Starts the avatar tracking.",
+	"SaveAvatarButton": "Saves the current avatar.",
+	"LoadAvatarButton": "Loads an avatar from a file.",
+	"ScaleSlider": "Adjusts the scale of the avatar."
+}
+
 func _process(delta):
 	if is_virtual_cam_running:
 		var img = get_viewport().get_texture().get_image()
 		godot_cmio.send_frame(img.save_jpg_to_buffer())
+
+	var focused_control = get_focus_owner()
+	if focused_control and control_hints.has(focused_control.name):
+		control_hint_label.text = "Hint: " + control_hints[focused_control.name]
+	else:
+		control_hint_label.text = ""
 
 func _on_CalibrateButton_pressed():
 	GameManager.emit_signal("calibrate_t_pose")
@@ -69,3 +87,10 @@ func _on_SaveDialog_file_selected(path: String):
 func _on_LoadDialog_file_selected(path: String):
 	GameManager.generated_avatar_path = path
 	GameManager.change_state(GameManager.AppState.MAIN_SCENE)
+
+func _on_ScaleSlider_value_changed(value):
+	var main_scene = get_tree().get_root().get_node_or_null("MainScene")
+	if main_scene and main_scene.has_node("LODAvatar"):
+		var lod_avatar = main_scene.get_node("LODAvatar")
+		if lod_avatar:
+			lod_avatar.scale = Vector3(value, value, value)

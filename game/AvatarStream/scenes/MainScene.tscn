@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://b6ywm2nwa7fkb"]
 
 [ext_resource type="Script" path="res://scripts/MainScene.gd" id="1_abcde"]
-[ext_resource type="PackedScene" uid="uid://dix2yabg0f7sm" path="res://scenes/AvatarNode.tscn" id="2_xqrw7"]
+[ext_resource type="PackedScene" uid="uid://d1e2f3g4h5i6" path="res://scenes/LODAvatar.tscn" id="2_lod_avatar"]
 [ext_resource type="PackedScene" uid="uid://c7wks3vyv2nfa" path="res://scenes/Tracking.tscn" id="3_abc12"]
 
 [node name="MainScene" type="Node3D" node_paths=PackedStringArray("avatar_placeholder")]
@@ -14,6 +14,6 @@ transform = Transform3D(1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 5)
 
-[node name="AvatarPlaceholder" parent="." instance=ExtResource("2_xqrw7")]
+[node name="LODAvatar" parent="." instance=ExtResource("2_lod_avatar")]
 
 [node name="TrackingUI" parent="." instance=ExtResource("3_abc12")]
