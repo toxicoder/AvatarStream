@@ -25,3 +25,13 @@ MediaPipeBridge="*res://scripts/MediaPipeBridge.gd"
 
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
+
+[rendering.quality]
+
+reflections/enabled=false
+ssao/enabled=false
+msaa_3d/enabled=false
+
+[asset_library]
+
+compression/mode="high"

@@ -7,11 +7,21 @@ enum AppState {
 	MAIN_SCENE
 }
 
+enum ThemeType {
+	DARK,
+	LIGHT,
+	HIGH_CONTRAST
+}
+
 var current_state: AppState = AppState.MAIN_MENU
 var generated_avatar_path: String = ""
 var error_popup_scene = preload("res://scenes/ErrorPopup.tscn")
-var high_contrast_theme = preload("res://themes/high_contrast_theme.tres")
-var high_contrast_active = false
+var themes = {
+	ThemeType.DARK: null,
+	ThemeType.LIGHT: preload("res://themes/light_theme.tres"),
+	ThemeType.HIGH_CONTRAST: preload("res://themes/high_contrast_theme.tres")
+}
+var current_theme = ThemeType.DARK
 
 signal calibrate_t_pose
 
@@ -55,8 +65,5 @@ func show_error(message: String):
 	get_tree().root.add_child(error_popup)
 
 func _on_ThemeButton_pressed():
-	high_contrast_active = not high_contrast_active
-	if high_contrast_active:
-		get_tree().root.theme = high_contrast_theme
-	else:
-		get_tree().root.theme = null
+	current_theme = ThemeType.values()[(current_theme.to_int() + 1) % ThemeType.values().size()]
+	get_tree().root.theme = themes[current_theme]

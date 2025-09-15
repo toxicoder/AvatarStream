@@ -1,0 +1,15 @@
+[gd_scene load_steps=4 format=3 uid="uid://d1e2f3g4h5i6"]
+
+[ext_resource type="Script" path="res://scripts/LOD.gd" id="1_lods"]
+[ext_resource type="PackedScene" uid="uid://dix2yabg0f7sm" path="res://scenes/AvatarNode.tscn" id="2_avatar_node"]
+[ext_resource type="PackedScene" uid="uid://dix2yabg0f7sm" path="res://scenes/AvatarNode_LOD1.tscn" id="3_avatar_node_lod1"]
+
+[node name="LODAvatar" type="Node3D"]
+script = ExtResource("1_lods")
+lods = [NodePath("AvatarNode"), NodePath("AvatarNode_LOD1")]
+lod_distances = [10.0, 20.0]
+
+[node name="AvatarNode" parent="." instance=ExtResource("2_avatar_node")]
+
+[node name="AvatarNode_LOD1" parent="." instance=ExtResource("3_avatar_node_lod1")]
+visible = false
