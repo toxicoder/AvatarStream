@@ -1,0 +1,10 @@
+# This file contains the Python dependencies for the avatar generation script.
+# You can install them using: pip install -r requirements.txt
+
+opencv-python
+
+# The following libraries are needed for the full implementation.
+# The exact package names and versions might vary.
+# torch
+# tripo-sr
+# smplx
