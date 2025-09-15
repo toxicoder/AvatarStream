@@ -1,0 +1,41 @@
+import os
+
+# The SCons script for building the GDNative module.
+#
+# It is based on the SConstruct file from the godot-cpp repository.
+# See: https://github.com/godotengine/godot-cpp/blob/master/SConstruct
+
+# Set up the environment
+env = Environment()
+
+# Add the godot-cpp include files
+env.Append(CPPPATH=["godot-cpp/include"])
+
+# Add the godot-cpp source files
+env.Append(CPPPATH=["godot-cpp/gen/include"])
+
+# Add the source files for our module
+env.Append(CPPPATH=["src"])
+
+# Set the source files
+sources = Glob("src/*.cpp")
+
+# Set the library name
+library_name = "godot_cmio"
+
+# Set the output path
+if env["platform"] == "windows":
+    env.SharedLibrary(
+        target=os.path.join("bin", library_name), source=sources, LIBS=[]
+    )
+elif env["platform"] == "linux":
+    env.SharedLibrary(
+        target=os.path.join("bin", "lib" + library_name), source=sources, LIBS=[]
+    )
+elif env["platform"] == "osx":
+    env.SharedLibrary(
+        target=os.path.join("bin", "lib" + library_name),
+        source=sources,
+        LIBS=[],
+        FRAMEWORKS=["CoreMedia", "VideoToolbox"],
+    )
