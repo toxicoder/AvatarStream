@@ -1,10 +1,311 @@
-[gd_scene load_steps=2 format=3 uid="uid://dix2yabg0f7sm"]
+[gd_scene load_steps=14 format=3 uid="uid://dix2yabg0f7sm"]
 
-[sub_resource type="BoxMesh" id="BoxMesh_vvt2v"]
+[sub_resource type="BoxMesh" id="BoxMesh_Hips"]
+size = Vector3(0.4, 0.2, 0.3)
 
-[node name="AvatarNode" type="Node3D"]
+[sub_resource type="BoxMesh" id="BoxMesh_Spine"]
+size = Vector3(0.3, 0.6, 0.25)
+
+[sub_resource type="BoxMesh" id="BoxMesh_Head"]
+size = Vector3(0.3, 0.3, 0.3)
+
+[sub_resource type="BoxMesh" id="BoxMesh_LeftUpperLeg"]
+size = Vector3(0.2, 0.8, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_RightUpperLeg"]
+size = Vector3(0.2, 0.8, 0.2)
+
+[sub_resource type="Animation" id="Animation_Idle"]
+resource_name = "idle"
+length = 2.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/path = NodePath("Skeleton3D:bones/0/position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, 1, 0), Vector3(0, 1.05, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_Walk"]
+resource_name = "walk"
+length = 1.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/path = NodePath("Skeleton3D:bones/1/rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Quaternion(0, 0, 0, 1), Quaternion(0.382683, 0, 0, 0.92388), Quaternion(0, 0, 0, 1)]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Skeleton3D:bones/5/rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.5, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Quaternion(0, 0, 0, 1), Quaternion(-0.382683, 0, 0, 0.92388), Quaternion(0, 0, 0, 1)]
+}
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_Idle"]
+animation = &"idle"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_Walk"]
+animation = &"walk"
+
+[sub_resource type="AnimationNodeBlendSpace1D" id="AnimationNodeBlendSpace1D_Blend"]
+blend_point_0/node = SubResource("AnimationNodeAnimation_Idle")
+blend_point_0/pos = 0.0
+blend_point_1/node = SubResource("AnimationNodeAnimation_Walk")
+blend_point_1/pos = 1.0
+blend_mode = 1
+
+[sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_Main"]
+graph_offset = Vector2(-200, 0)
+nodes/Animation/node = SubResource("AnimationNodeAnimation_Idle")
+nodes/Animation/position = Vector2(40, 120)
+nodes/Walk/node = SubResource("AnimationNodeAnimation_Walk")
+nodes/Walk/position = Vector2(40, 240)
+nodes/Blend/node = SubResource("AnimationNodeBlendSpace1D_Blend")
+nodes/Blend/position = Vector2(260, 120)
+nodes/output/position = Vector2(440, 120)
+node_connections = [&"output", 0, &"Blend", &"Blend", 0, &"Animation", &"Blend", 1, &"Walk"]
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_01"]
+emission_shape = 1
+emission_sphere_radius = 0.5
+particle_flag_disable_z = true
+spread = 180.0
+gravity = Vector3(0, 0, 0)
+initial_velocity_min = 1.0
+initial_velocity_max = 2.0
+angular_velocity_min = -120.0
+angular_velocity_max = 120.0
+orbit_velocity_min = 0.0
+orbit_velocity_max = 0.0
+scale_min = 0.1
+scale_max = 0.3
+
+[sub_resource type="QuadMesh" id="QuadMesh_01"]
+size = Vector2(0.1, 0.1)
+
+[node name="AvatarNode" type="Node3D" script="res://scripts/AvatarNode.gd"]
 
 [node name="Skeleton3D" type="Skeleton3D" parent="."]
+bones/0/name = "Hips"
+bones/0/position = Vector3(0, 1, 0)
+bones/1/name = "LeftUpperLeg"
+bones/1/parent = 0
+bones/1/position = Vector3(0.1, -0.1, 0)
+bones/2/name = "LeftLowerLeg"
+bones/2/parent = 1
+bones/2/position = Vector3(0, -0.5, 0)
+bones/3/name = "LeftFoot"
+bones/3/parent = 2
+bones/3/position = Vector3(0, -0.5, 0)
+bones/4/name = "LeftToes"
+bones/4/parent = 3
+bones/4/position = Vector3(0, 0, -0.2)
+bones/5/name = "RightUpperLeg"
+bones/5/parent = 0
+bones/5/position = Vector3(-0.1, -0.1, 0)
+bones/6/name = "RightLowerLeg"
+bones/6/parent = 5
+bones/6/position = Vector3(0, -0.5, 0)
+bones/7/name = "RightFoot"
+bones/7/parent = 6
+bones/7/position = Vector3(0, -0.5, 0)
+bones/8/name = "RightToes"
+bones/8/parent = 7
+bones/8/position = Vector3(0, 0, -0.2)
+bones/9/name = "Spine"
+bones/9/parent = 0
+bones/9/position = Vector3(0, 0.1, 0)
+bones/10/name = "Chest"
+bones/10/parent = 9
+bones/10/position = Vector3(0, 0.4, 0)
+bones/11/name = "UpperChest"
+bones/11/parent = 10
+bones/11/position = Vector3(0, 0.4, 0)
+bones/12/name = "Neck"
+bones/12/parent = 11
+bones/12/position = Vector3(0, 0.2, 0)
+bones/13/name = "Head"
+bones/13/parent = 12
+bones/13/position = Vector3(0, 0.2, 0)
+bones/14/name = "Jaw"
+bones/14/parent = 13
+bones/14/position = Vector3(0, -0.1, -0.05)
+bones/15/name = "LeftEye"
+bones/15/parent = 13
+bones/15/position = Vector3(0.1, 0.1, -0.1)
+bones/16/name = "RightEye"
+bones/16/parent = 13
+bones/16/position = Vector3(-0.1, 0.1, -0.1)
+bones/17/name = "LeftShoulder"
+bones/17/parent = 11
+bones/17/position = Vector3(0.2, 0.1, 0)
+bones/18/name = "LeftUpperArm"
+bones/18/parent = 17
+bones/18/position = Vector3(0.3, 0, 0)
+bones/19/name = "LeftLowerArm"
+bones/19/parent = 18
+bones/19/position = Vector3(0, -0.4, 0)
+bones/20/name = "LeftHand"
+bones/20/parent = 19
+bones/20/position = Vector3(0, -0.4, 0)
+bones/21/name = "LeftThumbMetacarpal"
+bones/21/parent = 20
+bones/21/position = Vector3(0, -0.1, 0)
+bones/22/name = "LeftThumbProximal"
+bones/22/parent = 21
+bones/22/position = Vector3(0, -0.1, 0)
+bones/23/name = "LeftThumbDistal"
+bones/23/parent = 22
+bones/23/position = Vector3(0, -0.1, 0)
+bones/24/name = "LeftIndexProximal"
+bones/24/parent = 20
+bones/24/position = Vector3(0, -0.1, 0)
+bones/25/name = "LeftIndexIntermediate"
+bones/25/parent = 24
+bones/25/position = Vector3(0, -0.1, 0)
+bones/26/name = "LeftIndexDistal"
+bones/26/parent = 25
+bones/26/position = Vector3(0, -0.1, 0)
+bones/27/name = "LeftMiddleProximal"
+bones/27/parent = 20
+bones/27/position = Vector3(0, -0.1, 0)
+bones/28/name = "LeftMiddleIntermediate"
+bones/28/parent = 27
+bones/28/position = Vector3(0, -0.1, 0)
+bones/29/name = "LeftMiddleDistal"
+bones/29/parent = 28
+bones/29/position = Vector3(0, -0.1, 0)
+bones/30/name = "LeftRingProximal"
+bones/30/parent = 20
+bones/30/position = Vector3(0, -0.1, 0)
+bones/31/name = "LeftRingIntermediate"
+bones/31/parent = 30
+bones/31/position = Vector3(0, -0.1, 0)
+bones/32/name = "LeftRingDistal"
+bones/32/parent = 31
+bones/32/position = Vector3(0, -0.1, 0)
+bones/33/name = "LeftLittleProximal"
+bones/33/parent = 20
+bones/33/position = Vector3(0, -0.1, 0)
+bones/34/name = "LeftLittleIntermediate"
+bones/34/parent = 33
+bones/34/position = Vector3(0, -0.1, 0)
+bones/35/name = "LeftLittleDistal"
+bones/35/parent = 34
+bones/35/position = Vector3(0, -0.1, 0)
+bones/36/name = "RightShoulder"
+bones/36/parent = 11
+bones/36/position = Vector3(-0.2, 0.1, 0)
+bones/37/name = "RightUpperArm"
+bones/37/parent = 36
+bones/37/position = Vector3(-0.3, 0, 0)
+bones/38/name = "RightLowerArm"
+bones/38/parent = 37
+bones/38/position = Vector3(0, -0.4, 0)
+bones/39/name = "RightHand"
+bones/39/parent = 38
+bones/39/position = Vector3(0, -0.4, 0)
+bones/40/name = "RightThumbMetacarpal"
+bones/40/parent = 39
+bones/40/position = Vector3(0, -0.1, 0)
+bones/41/name = "RightThumbProximal"
+bones/41/parent = 40
+bones/41/position = Vector3(0, -0.1, 0)
+bones/42/name = "RightThumbDistal"
+bones/42/parent = 41
+bones/42/position = Vector3(0, -0.1, 0)
+bones/43/name = "RightIndexProximal"
+bones/43/parent = 39
+bones/43/position = Vector3(0, -0.1, 0)
+bones/44/name = "RightIndexIntermediate"
+bones/44/parent = 43
+bones/44/position = Vector3(0, -0.1, 0)
+bones/45/name = "RightIndexDistal"
+bones/45/parent = 44
+bones/45/position = Vector3(0, -0.1, 0)
+bones/46/name = "RightMiddleProximal"
+bones/46/parent = 39
+bones/46/position = Vector3(0, -0.1, 0)
+bones/47/name = "RightMiddleIntermediate"
+bones/47/parent = 46
+bones/47/position = Vector3(0, -0.1, 0)
+bones/48/name = "RightMiddleDistal"
+bones/48/parent = 47
+bones/48/position = Vector3(0, -0.1, 0)
+bones/49/name = "RightRingProximal"
+bones/49/parent = 39
+bones/49/position = Vector3(0, -0.1, 0)
+bones/50/name = "RightRingIntermediate"
+bones/50/parent = 49
+bones/50/position = Vector3(0, -0.1, 0)
+bones/51/name = "RightRingDistal"
+bones/51/parent = 50
+bones/51/position = Vector3(0, -0.1, 0)
+bones/52/name = "RightLittleProximal"
+bones/52/parent = 39
+bones/52/position = Vector3(0, -0.1, 0)
+bones/53/name = "RightLittleIntermediate"
+bones/53/parent = 52
+bones/53/position = Vector3(0, -0.1, 0)
+bones/54/name = "RightLittleDistal"
+bones/54/parent = 53
+bones/54/position = Vector3(0, -0.1, 0)
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-mesh = SubResource("BoxMesh_vvt2v")
+[node name="Hips_Mesh" type="MeshInstance3D" parent="Skeleton3D"]
+mesh = SubResource("BoxMesh_Hips")
+skeleton = NodePath("..")
+bone_attachment/bone_idx = 0
+
+[node name="Spine_Mesh" type="MeshInstance3D" parent="Skeleton3D"]
+mesh = SubResource("BoxMesh_Spine")
+skeleton = NodePath("..")
+bone_attachment/bone_idx = 9
+
+[node name="Head_Mesh" type="MeshInstance3D" parent="Skeleton3D"]
+mesh = SubResource("BoxMesh_Head")
+skeleton = NodePath("..")
+bone_attachment/bone_idx = 13
+
+[node name="LeftUpperLeg_Mesh" type="MeshInstance3D" parent="Skeleton3D"]
+mesh = SubResource("BoxMesh_LeftUpperLeg")
+skeleton = NodePath("..")
+bone_attachment/bone_idx = 1
+
+[node name="RightUpperLeg_Mesh" type="MeshInstance3D" parent="Skeleton3D"]
+mesh = SubResource("BoxMesh_RightUpperLeg")
+skeleton = NodePath("..")
+bone_attachment/bone_idx = 5
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": &"default"
+}
+"anims/idle" = SubResource("Animation_Idle")
+"anims/walk" = SubResource("Animation_Walk")
+
+[node name="AnimationTree" type="AnimationTree" parent="."]
+tree_root = SubResource("AnimationNodeBlendTree_Main")
+anim_player = NodePath("../AnimationPlayer")
+active = true
+parameters/Blend/blend_position = 0.0
+
+[node name="GPUParticles3D" type="GPUParticles3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+visibility_range_end = 10.0
+amount = 100
+process_material = SubResource("ParticleProcessMaterial_01")
+draw_pass_1 = SubResource("QuadMesh_01")
