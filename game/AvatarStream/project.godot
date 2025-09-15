@@ -19,6 +19,7 @@ config/icon="res://icon.svg"
 
 GameManager="*res://scripts/GameManager.gd"
 AvatarGenerator="*res://scripts/AvatarGenerator.gd"
+MediaPipeBridge="*res://scripts/MediaPipeBridge.gd"
 
 [rendering]
 

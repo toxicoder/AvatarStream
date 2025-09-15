@@ -8,6 +8,8 @@ var is_virtual_cam_running = false
 @onready var virtual_cam_button = $VirtualCamButton
 @onready var resolution_option_button = $ResolutionOptionButton
 @onready var virtual_cam_label = $VirtualCamLabel
+@onready var save_dialog = $SaveDialog
+@onready var load_dialog = $LoadDialog
 
 func _ready():
 	# Add resolution options
@@ -44,4 +46,26 @@ func _process(delta):
 		godot_cmio.send_frame(img.save_jpg_to_buffer())
 
 func _on_CalibrateButton_pressed():
-	emit_signal("calibrate_t_pose")
+	GameManager.emit_signal("calibrate_t_pose")
+
+func _on_StartTrackingButton_pressed():
+	GameManager.change_state(GameManager.AppState.MAIN_SCENE)
+
+func _on_SaveAvatarButton_pressed():
+	save_dialog.popup_centered()
+
+func _on_LoadAvatarButton_pressed():
+	load_dialog.popup_centered()
+
+func _on_SaveDialog_file_selected(path: String):
+	var source_path = GameManager.generated_avatar_path
+	if source_path.is_empty():
+		GameManager.show_error("No avatar has been generated yet.")
+		return
+
+	var dir_access = DirAccess.open("res://")
+	dir_access.copy_absolute(source_path, path)
+
+func _on_LoadDialog_file_selected(path: String):
+	GameManager.generated_avatar_path = path
+	GameManager.change_state(GameManager.AppState.MAIN_SCENE)

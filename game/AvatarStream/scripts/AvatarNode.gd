@@ -45,13 +45,7 @@ var pose_scale = Vector3(2, 2, 1) # Adjust this to scale the movement
 
 func _ready():
 	AvatarGenerator.register_skeleton(get_node("Skeleton3D"))
-	# It's better to find the UI node in the scene tree
-	var ui_node = get_tree().root.find_child("TrackingUI", true, false)
-	if ui_node:
-		ui_node.connect("calibrate_t_pose", Callable(self, "_on_calibrate_t_pose"))
-	else:
-		print("TrackingUI node not found. Calibration will not work.")
-
+	GameManager.calibrate_t_pose.connect(_on_calibrate_t_pose)
 	stop_ik()
 
 func stop_ik():
@@ -66,12 +60,7 @@ func _on_calibrate_t_pose():
 	print("Calibrating T-Pose...")
 	var landmarks = MediaPipeBridge.get_pose_landmarks()
 	if landmarks and landmarks.size() > 0:
-		t_pose_data = {
-			"left_arm": landmarks[15], # Left wrist
-			"right_arm": landmarks[16], # Right wrist
-			"left_leg": landmarks[27], # Left ankle
-			"right_leg": landmarks[28]  # Right ankle
-		}
+		t_pose_data = landmarks
 		for target_name in ik_targets.keys():
 			initial_ik_target_positions[target_name] = ik_targets[target_name].global_position
 
@@ -92,11 +81,24 @@ func _process(_delta):
 		update_ik_target("left_leg", landmarks[27])
 		update_ik_target("right_leg", landmarks[28])
 
+func get_landmark_index(target_name):
+	match target_name:
+		"left_arm":
+			return 15
+		"right_arm":
+			return 16
+		"left_leg":
+			return 27
+		"right_leg":
+			return 28
+	return -1
+
 func update_ik_target(target_name, landmark_data):
-	if not t_pose_data.has(target_name):
+	var landmark_index = get_landmark_index(target_name)
+	if landmark_index == -1 or not t_pose_data or t_pose_data.size() <= landmark_index:
 		return
 
-	var t_pose_landmark = t_pose_data[target_name]
+	var t_pose_landmark = t_pose_data[landmark_index]
 
 	var target_offset = Vector3(
 		(landmark_data.x - t_pose_landmark.x) * pose_scale.x,
@@ -107,9 +109,9 @@ func update_ik_target(target_name, landmark_data):
 	# Apply Kalman filter for smoothing
 	if not kalman_filters.has(target_name):
 		kalman_filters[target_name] = {
-			"x": KalmanFilter.new(0.1, 0.1),
-			"y": KalmanFilter.new(0.1, 0.1),
-			"z": KalmanFilter.new(0.1, 0.1)
+			"x": KalmanFilter.new(0.01, 0.2),
+			"y": KalmanFilter.new(0.01, 0.2),
+			"z": KalmanFilter.new(0.01, 0.2)
 		}
 
 	var filtered_offset = Vector3(

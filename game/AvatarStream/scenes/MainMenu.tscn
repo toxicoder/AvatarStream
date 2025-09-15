@@ -35,5 +35,10 @@ text = "Load Default Avatar"
 layout_mode = 2
 text = "Generate New Avatar"
 
+[node name="ThemeButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Toggle High Contrast"
+
 [connection signal="pressed" from="VBoxContainer/LoadAvatarButton" to="." method="_on_LoadAvatar_pressed"]
 [connection signal="pressed" from="VBoxContainer/GenerateAvatarButton" to="." method="_on_GenerateAvatar_pressed"]
+[connection signal="pressed" from="VBoxContainer/ThemeButton" to="." method="_on_ThemeButton_pressed"]

@@ -1,6 +1,7 @@
 import sys
 import time
 import json
+import os
 
 def create_dummy_gltf(output_path):
     # A minimal GLTF file for a single-triangle mesh.
@@ -46,21 +47,21 @@ def create_dummy_gltf(output_path):
             "version": "2.0"
         }
     }
+    # Ensure the directory exists
+    os.makedirs(os.path.dirname(output_path), exist_ok=True)
     with open(output_path, 'w') as f:
         json.dump(gltf, f, indent=4)
 
-def write_progress(progress_file, percentage):
-    with open(progress_file, 'w') as f:
-        f.write(str(percentage))
+def write_progress(percentage):
+    print(f"PROGRESS: {percentage}", flush=True)
 
 if __name__ == "__main__":
-    if len(sys.argv) != 4:
-        print("Usage: python generate_avatar.py <input_image> <output_gltf> <progress_file>")
+    if len(sys.argv) != 3:
+        print("Usage: python generate_avatar.py <input_image> <output_gltf>")
         sys.exit(1)
 
     input_image_path = sys.argv[1]
     output_gltf_path = sys.argv[2]
-    progress_file = sys.argv[3]
 
     # Simulate a multi-step process
     steps = {
@@ -70,15 +71,15 @@ if __name__ == "__main__":
         "Exporting GLTF": 100
     }
 
-    write_progress(progress_file, 0)
+    write_progress(0)
     time.sleep(0.5)
 
     for step, progress in steps.items():
         # In a real script, you would perform the actual operations here.
-        print(f"Running step: {step}")
+        print(f"Running step: {step}", file=sys.stderr, flush=True) # Log to stderr
         time.sleep(1) # Simulate work
-        write_progress(progress_file, progress)
+        write_progress(progress)
 
     create_dummy_gltf(output_gltf_path)
-    print(f"Dummy GLTF created at {output_gltf_path}")
+    print(f"SUCCESS: {output_gltf_path}", flush=True)
     sys.exit(0)
