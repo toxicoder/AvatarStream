@@ -1,0 +1,17 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters might change in the future.
+
+config_version=5
+
+[application]
+
+config/name="AvatarStream"
+config/features=PackedStringArray("4.3", "3D")
+config/icon="res://icon.svg"
+run/main_scene="res://scenes/MainMenu.tscn"
+
+[rendering]
+
+renderer/rendering_method="forward_plus"
+textures/vram_compression/import_etc2_astc=true
