@@ -1,8 +1,11 @@
-[gd_scene load_steps=2 format=3 uid="uid://b6ywm2nwa7fkb"]
+[gd_scene load_steps=3 format=3 uid="uid://b6ywm2nwa7fkb"]
 
-[ext_resource type="PackedScene" uid="uid://dix2yabg0f7sm" path="res://scenes/AvatarNode.tscn" id="1_xqrw7"]
+[ext_resource type="Script" path="res://scripts/MainScene.gd" id="1_abcde"]
+[ext_resource type="PackedScene" uid="uid://dix2yabg0f7sm" path="res://scenes/AvatarNode.tscn" id="2_xqrw7"]
 
-[node name="MainScene" type="Node3D"]
+[node name="MainScene" type="Node3D" node_paths=PackedStringArray("avatar_placeholder")]
+script = ExtResource("1_abcde")
+avatar_placeholder = NodePath("AvatarPlaceholder")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 5, 5)
@@ -10,4 +13,4 @@ transform = Transform3D(1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 5)
 
-[node name="AvatarPlaceholder" parent="." instance=ExtResource("1_xqrw7")]
+[node name="AvatarPlaceholder" parent="." instance=ExtResource("2_xqrw7")]

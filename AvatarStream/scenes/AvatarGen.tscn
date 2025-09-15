@@ -1,0 +1,62 @@
+[gd_scene load_steps=2 format=3 uid="uid://cgrv8ggmab22l"]
+
+[ext_resource type="Script" path="res://scripts/AvatarGen.gd" id="1_abcde"]
+
+[node name="AvatarGen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_abcde")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -100.0
+offset_top = -100.0
+offset_right = 100.0
+offset_bottom = 100.0
+grow_horizontal = 2
+grow_vertical = 2
+spacing = 10
+
+[node name="SelectImageButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Select Image"
+
+[node name="WebcamButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Use Webcam"
+
+[node name="ProgressBar" type="ProgressBar" parent="VBoxContainer"]
+layout_mode = 2
+value = 0
+show_percentage = true
+
+[node name="StatusLabel" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "Select an image to start."
+horizontal_alignment = 1
+
+[node name="BackButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Back to Main Menu"
+
+[node name="FileDialog" type="FileDialog" parent="."]
+title = "Open a File"
+size = Vector2i(500, 400)
+ok_button_text = "Open"
+file_mode = 0
+access = 2
+filters = PackedStringArray("*.png, *.jpg ; Image Files")
+
+[connection signal="pressed" from="VBoxContainer/SelectImageButton" to="." method="_on_select_image_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/WebcamButton" to="." method="_on_webcam_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/BackButton" to="." method="_on_back_button_pressed"]
+[connection signal="file_selected" from="FileDialog" to="." method="_on_file_dialog_file_selected"]

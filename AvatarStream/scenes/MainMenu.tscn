@@ -11,7 +11,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_f5gde")
 
-[node name="LoadAvatarButton" type="Button" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -19,11 +19,21 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -100.0
-offset_top = -25.0
+offset_top = -50.0
 offset_right = 100.0
-offset_bottom = 25.0
+offset_bottom = 50.0
 grow_horizontal = 2
 grow_vertical = 2
-text = "Load Avatar"
+spacing = 10
 
-[connection signal="pressed" from="LoadAvatarButton" to="." method="_on_LoadAvatar_pressed"]
+[node name="LoadAvatarButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Load Default Avatar"
+
+[node name="GenerateAvatarButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Generate New Avatar"
+
+[connection signal="pressed" from="VBoxContainer/LoadAvatarButton" to="." method="_on_LoadAvatar_pressed"]
+[connection signal="pressed" from="VBoxContainer/GenerateAvatarButton" to="." method="_on_GenerateAvatar_pressed"]
