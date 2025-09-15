@@ -1,0 +1,13 @@
+[gd_scene load_steps=2 format=3 uid="uid://b6ywm2nwa7fkb"]
+
+[ext_resource type="PackedScene" uid="uid://dix2yabg0f7sm" path="res://scenes/AvatarNode.tscn" id="1_xqrw7"]
+
+[node name="MainScene" type="Node3D"]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 5, 5)
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 5)
+
+[node name="AvatarPlaceholder" parent="." instance=ExtResource("1_xqrw7")]
