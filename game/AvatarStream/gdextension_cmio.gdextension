@@ -1,0 +1,7 @@
+[configuration]
+entry_symbol = "gdextension_cmio_library_init"
+
+[libraries]
+windows.64 = "gdextension_cmio.windows.debug.64.dll"
+linux.64 = "libgdextension_cmio.linux.debug.64.so"
+osx.64 = "libgdextension_cmio.osx.debug.64.dylib"

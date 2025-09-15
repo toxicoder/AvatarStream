@@ -1,0 +1,20 @@
+#ifndef DEFS_HPP
+#define DEFS_HPP
+
+#define GDCLASS(m_class, m_inherits)
+#define GDVIRTUAL
+#define D_METHOD(m_name, ...) m_name
+
+namespace godot {
+
+enum ModuleInitializationLevel {
+	MODULE_INITIALIZATION_LEVEL_CORE,
+	MODULE_INITIALIZATION_LEVEL_SERVERS,
+	MODULE_INITIALIZATION_LEVEL_SCENE,
+	MODULE_INITIALIZATION_LEVEL_EDITOR,
+	MODULE_INITIALIZATION_LEVEL_MAX,
+};
+
+}
+
+#endif // DEFS_HPP
