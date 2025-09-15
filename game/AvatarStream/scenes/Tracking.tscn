@@ -11,35 +11,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_vtpf5")
 
-[node name="CalibrateButton" type="Button" parent="."]
-layout_mode = 1
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -75.0
-offset_top = -100.0
-offset_right = 75.0
-offset_bottom = -50.0
-grow_horizontal = 2
-grow_vertical = 0
-text = "Calibrate T-Pose"
-
-[node name="VirtualCamLabel" type="Label" parent="."]
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -100.0
-offset_top = 20.0
-offset_right = 100.0
-offset_bottom = 40.0
-grow_horizontal = 2
-text = "Virtual Camera:"
-horizontal_alignment = 1
-
-[node name="VirtualCamButton" type="Button" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -47,40 +19,66 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -100.0
-offset_top = -25.0
-offset_right = 100.0
-offset_bottom = 25.0
-grow_horizontal = 2
-grow_vertical = 2
-text = "Start Virtual Camera"
-
-[node name="ResolutionLabel" type="Label" parent="."]
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -100.0
-offset_top = 80.0
+offset_top = -100.0
 offset_right = 100.0
 offset_bottom = 100.0
 grow_horizontal = 2
+grow_vertical = 2
+spacing = 10
+alignment = 1
+
+[node name="VirtualCamLabel" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "Virtual Camera:"
+horizontal_alignment = 1
+
+[node name="VirtualCamButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Start Virtual Camera"
+
+[node name="ResolutionLabel" type="Label" parent="VBoxContainer"]
+layout_mode = 2
 text = "Resolution:"
 horizontal_alignment = 1
 
-[node name="ResolutionOptionButton" type="OptionButton" parent="."]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -100.0
-offset_top = 100.0
-offset_right = 100.0
-offset_bottom = 130.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="ResolutionOptionButton" type="OptionButton" parent="VBoxContainer"]
+layout_mode = 2
 
-[connection signal="pressed" from="CalibrateButton" to="." method="_on_CalibrateButton_pressed"]
-[connection signal="pressed" from="VirtualCamButton" to="." method="_on_VirtualCamButton_pressed"]
-[connection signal="item_selected" from="ResolutionOptionButton" to="." method="_on_ResolutionOptionButton_item_selected"]
+[node name="CalibrateButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Calibrate T-Pose"
+
+[node name="SaveAvatarButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Save Avatar"
+
+[node name="LoadAvatarButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Load Avatar"
+
+[node name="SaveDialog" type="FileDialog" parent="."]
+title = "Save Avatar"
+ok_button_text = "Save"
+file_mode = 3
+access = 2
+
+[node name="LoadDialog" type="FileDialog" parent="."]
+title = "Load Avatar"
+ok_button_text = "Load"
+file_mode = 0
+access = 2
+filters = PackedStringArray("*.gltf ; GLTF Files")
+
+
+[connection signal="pressed" from="VBoxContainer/VirtualCamButton" to="." method="_on_VirtualCamButton_pressed"]
+[connection signal="item_selected" from="VBoxContainer/ResolutionOptionButton" to="." method="_on_ResolutionOptionButton_item_selected"]
+[connection signal="pressed" from="VBoxContainer/CalibrateButton" to="." method="_on_CalibrateButton_pressed"]
+[node name="StartTrackingButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Start Tracking"
+
+[connection signal="pressed" from="VBoxContainer/SaveAvatarButton" to="." method="_on_SaveAvatarButton_pressed"]
+[connection signal="pressed" from="VBoxContainer/LoadAvatarButton" to="." method="_on_LoadAvatarButton_pressed"]
+[connection signal="pressed" from="VBoxContainer/StartTrackingButton" to="." method="_on_StartTrackingButton_pressed"]
+[connection signal="file_selected" from="SaveDialog" to="." method="_on_SaveDialog_file_selected"]
+[connection signal="file_selected" from="LoadDialog" to="." method="_on_LoadDialog_file_selected"]

@@ -21,7 +21,7 @@ func _on_webcam_button_pressed():
 	# Placeholder for webcam logic
 
 func _on_back_button_pressed():
-	get_tree().change_scene_to_file("res://scenes/MainMenu.tscn")
+	GameManager.change_state(GameManager.AppState.MAIN_MENU)
 
 func _on_file_dialog_file_selected(path: String):
 	status_label.text = "Starting generation..."
@@ -45,6 +45,9 @@ func _on_generation_finished(path: String):
 	webcam_button.disabled = false
 	back_button.disabled = false
 
-	# Store the path and switch to the main scene
-	GameManager.generated_avatar_path = path
-	get_tree().change_scene_to_file("res://scenes/MainScene.tscn")
+	if path.is_empty():
+		# Handle generation failure
+		status_label.text = "Generation failed. Please try again."
+	else:
+		# Let the GameManager handle the state transition
+		GameManager.on_avatar_generated(path)

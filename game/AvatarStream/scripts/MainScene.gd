@@ -15,4 +15,6 @@ func _ready():
 			# We can also reset the path so it doesn't load again on scene reload
 			GameManager.generated_avatar_path = ""
 		else:
-			print("Error: Could not load the generated avatar scene from path: " + GameManager.generated_avatar_path)
+			var error_message = "Error: Could not load the generated avatar scene from path: " + GameManager.generated_avatar_path
+			print(error_message)
+			GameManager.show_error(error_message)

@@ -8,61 +8,54 @@ signal generation_finished(path)
 var skeleton: Skeleton3D
 var pose_timer: Timer
 
-# Variables for async process
-var generation_pid = 0
-var progress_file_path = "user://progress.txt"
-var output_gltf_path = ""
+func _ready():
+	WorkerThreadPool.max_threads = 1 # We only need one thread for this
 
 func generate_avatar(image_path: String):
 	emit_signal("generation_started")
+	var task = func():
+		_generate_avatar_thread(image_path)
+	WorkerThreadPool.add_task(task)
 
+func _generate_avatar_thread(image_path: String):
 	# Define paths
 	var python_script_path = "res://scripts/python/generate_avatar.py"
 	# Create a unique filename for the output gltf
 	var timestamp = Time.get_unix_time_from_system()
-	output_gltf_path = "res://assets/avatars/avatar_" + str(timestamp) + ".gltf"
+	var output_gltf_path = "res://assets/avatars/avatar_" + str(timestamp) + ".gltf"
 
 	# Prepare arguments for the script
 	var args = [
 		ProjectSettings.globalize_path(image_path),
-		ProjectSettings.globalize_path(output_gltf_path),
-		ProjectSettings.globalize_path(progress_file_path)
+		ProjectSettings.globalize_path(output_gltf_path)
 	]
 
 	# Execute the python script
-	# Note: This assumes 'python' is in the system's PATH.
-	# For better portability, one might specify the full path to the python executable.
-	generation_pid = OS.create_process("python", [ProjectSettings.globalize_path(python_script_path)] + args)
+	var output = []
+	var exit_code = OS.execute("python", [ProjectSettings.globalize_path(python_script_path)] + args, output, true, true)
 
-	if generation_pid == -1:
-		print("Error: Failed to start the generation process.")
-		emit_signal("generation_finished", "")
+	if exit_code != 0:
+		print("Error: Generation script failed with exit code: " + str(exit_code))
+		call_deferred("emit_signal", "generation_finished", "")
+		GameManager.call_deferred("show_error", "Avatar generation script failed. See console for details.")
+		return
 
+	# The python script will print progress to stdout
+	# For this example, we assume the last line of output is the path
+	var result_path = ""
+	for line in output:
+		if line.begins_with("PROGRESS:"):
+			var progress = float(line.replace("PROGRESS:", "").strip())
+			call_deferred("emit_signal", "generation_progress", progress)
+		elif line.begins_with("SUCCESS:"):
+			result_path = line.replace("SUCCESS:", "").strip()
 
-func _process(delta):
-	if generation_pid != 0:
-		if OS.is_process_running(generation_pid):
-			# Process is running, check for progress
-			if FileAccess.file_exists(progress_file_path):
-				var file = FileAccess.open(progress_file_path, FileAccess.READ)
-				var progress_text = file.get_as_text()
-				file.close()
-				if progress_text.is_valid_float():
-					emit_signal("generation_progress", float(progress_text))
-		else:
-			# Process finished
-			var exit_code = OS.get_process_exit_code(generation_pid)
-			generation_pid = 0
-
-			if exit_code == 0 and FileAccess.file_exists(output_gltf_path):
-				emit_signal("generation_finished", output_gltf_path)
-			else:
-				print("Error: Generation script failed with exit code: " + str(exit_code))
-				emit_signal("generation_finished", "")
-
-			# Clean up progress file
-			if FileAccess.file_exists(progress_file_path):
-				DirAccess.remove_absolute(ProjectSettings.globalize_path(progress_file_path))
+	if FileAccess.file_exists(result_path):
+		call_deferred("emit_signal", "generation_finished", result_path)
+	else:
+		print("Error: Generation script finished but output file not found.")
+		call_deferred("emit_signal", "generation_finished", "")
+		GameManager.call_deferred("show_error", "Avatar generation finished, but the output file was not found.")
 
 
 func register_skeleton(target_skeleton: Skeleton3D):
@@ -99,6 +92,3 @@ func _change_pose():
 				rng.randf_range(-PI / 8, PI / 8)
 			))
 			tween.tween_property(skeleton, "bones/" + str(i) + "/rotation", random_rotation, 1.8)
-
-func _ready():
-	pass
