@@ -18,9 +18,17 @@ def mock_socket():
 
 @pytest.fixture
 def tracker(mock_socket):
-    with patch('holistic_tracker.mp.solutions.holistic.Holistic') as MockHolistic:
+    with patch('holistic_tracker.mp') as MockMP:
         # Mock the Holistic model
-        mock_holistic_instance = MockHolistic.return_value
+        # The code uses:
+        # self.mp_holistic = mp.solutions.holistic
+        # self.holistic = self.mp_holistic.Holistic(...)
+
+        # By mocking 'holistic_tracker.mp', MockMP becomes the 'mp' module in holistic_tracker.
+        # MockMP.solutions.holistic.Holistic will be the class constructor.
+
+        # We can configure the return value if needed, but the default MagicMock behavior is usually sufficient
+        # to prevent errors and verify calls.
 
         tracker = HolisticTracker(sock=mock_socket, no_mirror=True) # no_mirror=True to skip flip logic
         yield tracker

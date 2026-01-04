@@ -1,0 +1,32 @@
+name: Python Tests
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python 3.12
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.12"
+
+    - name: Install dependencies
+      working-directory: game/AvatarStream/scripts/python
+      run: |
+        python -m pip install --upgrade pip
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        # Ensure pytest is installed if it's not in requirements.txt (though it is)
+        pip install pytest pytest-mock
+
+    - name: Run tests
+      working-directory: game/AvatarStream/scripts/python
+      run: |
+        pytest
